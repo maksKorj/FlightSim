@@ -93,7 +93,7 @@
                 {
                     "name": "negative",
                     "id": "db898ab6-62ed-46c8-aa8c-185c8d579b9d",
-                    "path": "<Gamepad>/leftShoulder",
+                    "path": "<Keyboard>/leftCtrl",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -104,7 +104,7 @@
                 {
                     "name": "positive",
                     "id": "576b7d67-9a4c-42d1-be0c-aa52f335341a",
-                    "path": "<Gamepad>/rightShoulder",
+                    "path": "<Keyboard>/leftShift",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -113,15 +113,59 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "",
+                    "name": "2D Vector",
                     "id": "9114f377-1c7f-4991-a591-b668ae086658",
-                    "path": "<Gamepad>/leftStick",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RollPitch",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "527e3710-4e4e-4f23-a06d-27b9f572f638",
+                    "path": "<Keyboard>/w",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "RollPitch",
                     "isComposite": false,
-                    "isPartOfComposite": false
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "f95d7fe3-11ef-4381-8056-fb0d9b4c57d6",
+                    "path": "<Keyboard>/s",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RollPitch",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "56f0aa6d-c032-4da9-a64d-7b6e88d1df5c",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RollPitch",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "e6d1689e-1033-442b-bc47-54c5c9b8d540",
+                    "path": "<Keyboard>/d",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RollPitch",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "1D Axis",
@@ -137,7 +181,7 @@
                 {
                     "name": "negative",
                     "id": "9c73b4a5-cd71-42e9-a47b-fc94c0dc4536",
-                    "path": "<Gamepad>/leftTrigger",
+                    "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -148,7 +192,7 @@
                 {
                     "name": "positive",
                     "id": "4f8b04ef-9161-4bc7-8b96-20890e94362f",
-                    "path": "<Gamepad>/rightTrigger",
+                    "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -157,20 +201,64 @@
                     "isPartOfComposite": true
                 },
                 {
-                    "name": "",
+                    "name": "2D Vector",
                     "id": "45163a0d-825d-4388-9771-5cc782697311",
-                    "path": "<Gamepad>/rightStick",
+                    "path": "2DVector",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Camera",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "up",
+                    "id": "35c4a5a6-ec10-4ce2-b6d7-4f122c248c44",
+                    "path": "<Keyboard>/upArrow",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
                     "action": "Camera",
                     "isComposite": false,
-                    "isPartOfComposite": false
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "down",
+                    "id": "7a3f6f46-5749-4f8d-a36d-82837a92fd99",
+                    "path": "<Keyboard>/downArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Camera",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "left",
+                    "id": "98c34ed3-041a-4632-9098-f4d177097911",
+                    "path": "<Keyboard>/leftArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Camera",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "right",
+                    "id": "fffd6c1f-1f47-4402-a329-520ef8e787cc",
+                    "path": "<Keyboard>/rightArrow",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Camera",
+                    "isComposite": false,
+                    "isPartOfComposite": true
                 },
                 {
                     "name": "",
                     "id": "8b4e38a0-f793-4d60-bcda-53f58cf07745",
-                    "path": "<Gamepad>/dpad/down",
+                    "path": "<Keyboard>/f",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -192,7 +280,7 @@
                 {
                     "name": "",
                     "id": "c854cd2e-491a-4639-9836-296333fced16",
-                    "path": "<Gamepad>/buttonEast",
+                    "path": "<Keyboard>/r",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -203,7 +291,7 @@
                 {
                     "name": "",
                     "id": "f8cd153b-2c78-4690-b96d-88366b14cb64",
-                    "path": "<Gamepad>/buttonSouth",
+                    "path": "<Keyboard>/c",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
