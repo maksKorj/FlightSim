@@ -628,7 +628,7 @@ public class Plane : MonoBehaviour {
         UpdateRadarAltimeter();
     }
 
-    void OnCollisionEnter(Collision collision) {
+    /*void OnCollisionEnter(Collision collision) {
         for (int i = 0; i < collision.contactCount; i++) {
             var contact = collision.contacts[i];
 
@@ -649,5 +649,5 @@ public class Plane : MonoBehaviour {
 
             return;
         }
-    }
+    }*/
 }
