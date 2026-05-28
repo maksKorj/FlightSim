@@ -13,8 +13,6 @@ public class PlayerController : MonoBehaviour {
 
     Vector3 controlInput;
     PlaneCamera planeCamera;
-    AIController aiController;
-    AutopilotController autopilotController;
 
     void Start() {
         planeCamera = GetComponent<PlaneCamera>();
@@ -23,8 +21,6 @@ public class PlayerController : MonoBehaviour {
 
     void SetPlane(Plane plane) {
         this.plane = plane;
-        aiController = plane.GetComponent<AIController>();
-        autopilotController = plane.GetComponent<AutopilotController>();
 
         if (planeHUD != null) {
             planeHUD.SetPlane(plane);
@@ -35,14 +31,6 @@ public class PlayerController : MonoBehaviour {
     }
 
     bool ShouldOverrideControl() {
-        if (aiController != null && aiController.enabled) {
-            return true;
-        }
-
-        if (autopilotController != null && autopilotController.enabled) {
-            return true;
-        }
-
         return false;
     }
 
@@ -92,32 +80,14 @@ public class PlayerController : MonoBehaviour {
 
     public void OnFireMissile(InputAction.CallbackContext context) {
         if (plane == null) return;
-
-        if (context.phase == InputActionPhase.Performed) {
-            plane.TryFireMissile();
-        }
     }
 
     public void OnFireCannon(InputAction.CallbackContext context) {
         if (plane == null) return;
-
-        if (context.phase == InputActionPhase.Started) {
-            plane.SetCannonInput(true);
-        } else if (context.phase == InputActionPhase.Canceled) {
-            plane.SetCannonInput(false);
-        }
     }
 
     public void OnToggleAI(InputAction.CallbackContext context) {
         if (plane == null) return;
-
-        if (aiController != null) {
-            aiController.enabled = !aiController.enabled;
-        }
-
-        if (autopilotController != null) {
-            autopilotController.enabled = !autopilotController.enabled;
-        }
     }
 
     void Update() {

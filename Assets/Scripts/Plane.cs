@@ -90,37 +90,6 @@ public class Plane : MonoBehaviour {
     [SerializeField]
     float radarAltGroundedThreshold;
 
-    [Header("Weapons")]
-    [SerializeField]
-    List<Transform> hardpoints;
-    [SerializeField]
-    float missileReloadTime;
-    [SerializeField]
-    float missileDebounceTime;
-    [SerializeField]
-    GameObject missilePrefab;
-    [SerializeField]
-    Target target;
-    [SerializeField]
-    float lockRange;
-    [SerializeField]
-    float lockSpeed;
-    [SerializeField]
-    float lockAngle;
-    [SerializeField]
-    [Tooltip("Firing rate in Rounds Per Minute")]
-    float cannonFireRate;
-    [SerializeField]
-    float cannonDebounceTime;
-    [SerializeField]
-    float cannonSpread;
-    [SerializeField]
-    Transform cannonSpawnPoint;
-    [SerializeField]
-    GameObject bulletPrefab;
-
-    new PlaneAnimation animation;
-
     bool crashed;
     float throttleInput;
     Vector3 controlInput;
@@ -128,15 +97,6 @@ public class Plane : MonoBehaviour {
 
     Vector3 lastVelocity;
     PhysicsMaterial landingGearDefaultMaterial;
-
-    int missileIndex;
-    List<float> missileReloadTimers;
-    float missileDebounceTimer;
-    Vector3 missileLockDirection;
-
-    bool cannonFiring;
-    float cannonDebounceTimer;
-    float cannonFiringTimer;
 
     public float MaxHealth {
         get {
@@ -215,34 +175,12 @@ public class Plane : MonoBehaviour {
         }
     }
 
-    public bool MissileLocked { get; private set; }
-    public bool MissileTracking { get; private set; }
-    public Target Target {
-        get {
-            return target;
-        }
-    }
-    public Vector3 MissileLockDirection {
-        get {
-            return Rigidbody.rotation * missileLockDirection;
-        }
-    }
-
     void Start() {
-        animation = GetComponent<PlaneAnimation>();
         Rigidbody = GetComponent<Rigidbody>();
 
         if (landingGear.Count > 0) {
             landingGearDefaultMaterial = landingGear[0].sharedMaterial;
         }
-
-        missileReloadTimers = new List<float>(hardpoints.Count);
-
-        foreach (var h in hardpoints) {
-            missileReloadTimers.Add(0);
-        }
-
-        missileLockDirection = Vector3.forward;
 
         Rigidbody.centerOfMass = centerOfMassOffset;
         Rigidbody.linearVelocity = Rigidbody.rotation * new Vector3(0, 0, initialSpeed);
@@ -256,11 +194,6 @@ public class Plane : MonoBehaviour {
     public void SetControlInput(Vector3 input) {
         if (Dead) return;
         controlInput = Vector3.ClampMagnitude(input, 1);
-    }
-
-    public void SetCannonInput(bool input) {
-        if (Dead) return;
-        cannonFiring = input;
     }
 
     public void ToggleFlaps() {
@@ -277,7 +210,6 @@ public class Plane : MonoBehaviour {
         throttleInput = 0;
         Throttle = 0;
         Dead = true;
-        cannonFiring = false;
 
         damageEffect.GetComponent<ParticleSystem>().Pause();
         deathEffect.SetActive(true);
@@ -496,85 +428,6 @@ public class Plane : MonoBehaviour {
         );
     }
 
-    public void TryFireMissile() {
-        if (Dead) return;
-
-        //try all available missiles
-        for (int i = 0; i < hardpoints.Count; i++) {
-            var index = (missileIndex + i) % hardpoints.Count;
-            if (missileDebounceTimer == 0 && missileReloadTimers[index] == 0) {
-                FireMissile(index);
-
-                missileIndex = (index + 1) % hardpoints.Count;
-                missileReloadTimers[index] = missileReloadTime;
-                missileDebounceTimer = missileDebounceTime;
-
-                animation.ShowMissileGraphic(index, false);
-                break;
-            }
-        }
-    }
-
-    void FireMissile(int index) {
-        var hardpoint = hardpoints[index];
-        var missileGO = Instantiate(missilePrefab, hardpoint.position, hardpoint.rotation);
-        var missile = missileGO.GetComponent<Missile>();
-        missile.Launch(this, MissileLocked ? Target : null);
-    }
-
-    void UpdateWeapons(float dt) {
-        UpdateWeaponCooldown(dt);
-        UpdateMissileLock(dt);
-        UpdateCannon(dt);
-    }
-
-    void UpdateWeaponCooldown(float dt) {
-        missileDebounceTimer = Mathf.Max(0, missileDebounceTimer - dt);
-        cannonDebounceTimer = Mathf.Max(0, cannonDebounceTimer - dt);
-        cannonFiringTimer = Mathf.Max(0, cannonFiringTimer - dt);
-
-        for (int i = 0; i < missileReloadTimers.Count; i++) {
-            missileReloadTimers[i] = Mathf.Max(0, missileReloadTimers[i] - dt);
-
-            if (missileReloadTimers[i] == 0) {
-                animation.ShowMissileGraphic(i, true);
-            }
-        }
-    }
-
-    void UpdateMissileLock(float dt) {
-        //default neutral position is forward
-        Vector3 targetDir = Vector3.forward;
-        MissileTracking = false;
-
-        if (Target != null && !Target.Plane.Dead) {
-            var error = target.Position - Rigidbody.position;
-            var errorDir = Quaternion.Inverse(Rigidbody.rotation) * error.normalized; //transform into local space
-
-            if (error.magnitude <= lockRange && Vector3.Angle(Vector3.forward, errorDir) <= lockAngle) {
-                MissileTracking = true;
-                targetDir = errorDir;
-            }
-        }
-
-        //missile lock either rotates towards the target, or towards the neutral position
-        missileLockDirection = Vector3.RotateTowards(missileLockDirection, targetDir, Mathf.Deg2Rad * lockSpeed * dt, 0);
-
-        MissileLocked = Target != null && MissileTracking && Vector3.Angle(missileLockDirection, targetDir) < lockSpeed * dt;
-    }
-
-    void UpdateCannon(float dt) {
-        if (cannonFiring && cannonFiringTimer == 0) {
-            cannonFiringTimer = 60f / cannonFireRate;
-
-            var spread = Random.insideUnitCircle * cannonSpread;
-
-            var bulletGO = Instantiate(bulletPrefab, cannonSpawnPoint.position, cannonSpawnPoint.rotation * Quaternion.Euler(spread.x, spread.y, 0));
-            var bullet = bulletGO.GetComponent<Bullet>();
-            bullet.Fire(this);
-        }
-    }
-
     void UpdateRadarAltimeter() {
         Vector3 pos = Rigidbody.position;
         Vector3 dir = Vector3.down;
@@ -621,9 +474,6 @@ public class Plane : MonoBehaviour {
 
         //calculate again, so that other systems can read this plane's state
         CalculateState(dt);
-
-        //update weapon state
-        UpdateWeapons(dt);
 
         UpdateRadarAltimeter();
     }
