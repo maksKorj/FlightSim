@@ -158,8 +158,9 @@ public class PlaneHUD : MonoBehaviour {
         }
     }
 
-    void UpdateAirspeed() {
-        var speed = plane.LocalVelocity.z * Units.metersToKnots;
+    void UpdateAirspeed()
+    {
+        var speed = plane.GetComponent<Rigidbody>().linearVelocity.magnitude;
         airspeed.text = string.Format("{0:0}", speed);
     }
 
