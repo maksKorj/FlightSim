@@ -147,8 +147,7 @@ public class PlaneHUD : MonoBehaviour {
     }
 
     void UpdateHealth() {
-        healthBar.SetValue(plane.Health / plane.MaxHealth);
-        healthText.text = string.Format("{0:0}", plane.Health);
+        
     }
 
     void LateUpdate() {
