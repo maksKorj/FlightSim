@@ -89,6 +89,12 @@ public class Plane : MonoBehaviour {
     LayerMask radarAltMask;
     [SerializeField]
     float radarAltGroundedThreshold;
+    [SerializeField]
+    bool keepRigidbodyAtOrigin = true;
+    [SerializeField]
+    Vector3 rigidbodyAnchorPosition = Vector3.zero;
+    [SerializeField]
+    List<Transform> movingWorldRoots;
 
     bool crashed;
     float throttleInput;
@@ -135,6 +141,7 @@ public class Plane : MonoBehaviour {
     public Vector3 GForce { get; private set; }
     public Vector3 LocalVelocity { get; private set; }
     public Vector3 LocalGForce { get; private set; }
+    public Vector3 SimulationPosition { get; private set; }
 
     /// <summary>
     /// Local Angular Velocity in radians/second
@@ -177,6 +184,7 @@ public class Plane : MonoBehaviour {
 
     void Start() {
         Rigidbody = GetComponent<Rigidbody>();
+        InitializeMovingWorldRoots();
 
         if (landingGear.Count > 0) {
             landingGearDefaultMaterial = landingGear[0].sharedMaterial;
@@ -184,6 +192,37 @@ public class Plane : MonoBehaviour {
 
         Rigidbody.centerOfMass = centerOfMassOffset;
         Rigidbody.linearVelocity = Rigidbody.rotation * new Vector3(0, 0, initialSpeed);
+        SimulationPosition = keepRigidbodyAtOrigin ? Vector3.zero : Rigidbody.position;
+
+        RecenterRigidbody();
+    }
+
+    void AddMovingWorldRoot(Transform root) {
+        if (root == null) return;
+        if (root == transform || transform.IsChildOf(root)) return;
+        if (movingWorldRoots.Contains(root)) return;
+
+        movingWorldRoots.Add(root);
+    }
+
+    void InitializeMovingWorldRoots() {
+        if (movingWorldRoots == null) {
+            movingWorldRoots = new List<Transform>();
+        }
+
+        if (movingWorldRoots.Count > 0) return;
+
+        foreach (var terrain in FindObjectsOfType<Terrain>()) {
+            AddMovingWorldRoot(terrain.transform);
+        }
+
+        foreach (var runway in FindObjectsOfType<Runway>()) {
+            AddMovingWorldRoot(runway.transform);
+        }
+
+        foreach (var waypoints in FindObjectsOfType<WaypointList>()) {
+            AddMovingWorldRoot(waypoints.transform);
+        }
     }
 
     public void SetThrottleInput(float input) {
@@ -272,6 +311,10 @@ public class Plane : MonoBehaviour {
 
     void CalculateState(float dt) {
         var invRotation = Quaternion.Inverse(Rigidbody.rotation);
+        if (!keepRigidbodyAtOrigin) {
+            SimulationPosition = Rigidbody.position;
+        }
+
         Velocity = Rigidbody.linearVelocity;
         LocalVelocity = invRotation * Velocity;  //transform world velocity into local space
         LocalAngularVelocity = invRotation * Rigidbody.angularVelocity;  //transform into local space
@@ -442,8 +485,32 @@ public class Plane : MonoBehaviour {
         }
     }
 
+    void RecenterRigidbody() {
+        if (!keepRigidbodyAtOrigin) return;
+        if (Rigidbody == null) return;
+
+        var displacement = Rigidbody.position - rigidbodyAnchorPosition;
+        if (displacement.sqrMagnitude < 0.000001f) return;
+
+        SimulationPosition += displacement;
+
+        if (movingWorldRoots != null) {
+            foreach (var root in movingWorldRoots) {
+                if (root == null) continue;
+                if (root == transform || transform.IsChildOf(root)) continue;
+                root.position -= displacement;
+            }
+        }
+
+        Rigidbody.position = rigidbodyAnchorPosition;
+        transform.position = rigidbodyAnchorPosition;
+        Physics.SyncTransforms();
+    }
+
     void FixedUpdate() {
         float dt = Time.fixedDeltaTime;
+
+        RecenterRigidbody();
 
         //calculate at start, to capture any changes that happened externally
         CalculateState(dt);
@@ -476,6 +543,10 @@ public class Plane : MonoBehaviour {
         CalculateState(dt);
 
         UpdateRadarAltimeter();
+    }
+
+    void LateUpdate() {
+        RecenterRigidbody();
     }
 
     /*void OnCollisionEnter(Collision collision) {

@@ -482,7 +482,7 @@ Transform:
   m_GameObject: {fileID: 162281317}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -10000, y: 0, z: -10000}
+  m_LocalPosition: {x: -7124, y: -1000, z: -4556}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -624,7 +624,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   updateRate: 10
   normalColor: {r: 0, g: 1, b: 0, a: 1}
-  lockColor: {r: 1, g: 0, b: 0, a: 1}
   helpDialogs:
   - {fileID: 2112024343}
   - {fileID: 254807492}
@@ -639,31 +638,6 @@ MonoBehaviour:
   altitude: {fileID: 1826498456}
   healthBar: {fileID: 1732212695}
   healthText: {fileID: 1747361777}
-  targetBox: {fileID: 1921085922}
-  targetName: {fileID: 913712616}
-  targetRange: {fileID: 147954108}
-  missileLock: {fileID: 1562114785}
-  reticle: {fileID: 799975910}
-  reticleLine: {fileID: 327152945}
-  targetArrow: {fileID: 1041648562}
-  missileArrow: {fileID: 733149114}
-  targetArrowThreshold: 30
-  missileArrowThreshold: 30
-  cannonRange: 1000
-  bulletSpeed: 1000
-  aiMessage: {fileID: 1550426551}
-  missileWarningGraphics:
-  - {fileID: 908946524}
-  - {fileID: 133852679}
-  - {fileID: 741449414}
-  - {fileID: 1404204714}
-  - {fileID: 1072515902}
-  - {fileID: 1934544312}
-  - {fileID: 17436595}
-  - {fileID: 1969671575}
-  - {fileID: 1641956028}
-  - {fileID: 1826498456}
-  - {fileID: 1124648713}
 --- !u!1 &254807492
 GameObject:
   m_ObjectHideFlags: 0
@@ -681,7 +655,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &254807493
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1422,7 +1396,7 @@ Transform:
   m_GameObject: {fileID: 471972766}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.16504757, z: -0, w: 0.9862857}
-  m_LocalPosition: {x: -7482.7183, y: 231.40851, z: -6396.9746}
+  m_LocalPosition: {x: 493, y: -130.9, z: 1432}
   m_LocalScale: {x: 30, y: 2, z: 2000}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2301,6 +2275,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: HealthBar
       objectReference: {fileID: 0}
+    - target: {fileID: 4819415882128910488, guid: 23e11d89a86f9e94a81b8c17a099347f,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4819415882128910489, guid: 23e11d89a86f9e94a81b8c17a099347f,
         type: 3}
       propertyPath: m_Pivot.x
@@ -2610,7 +2589,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1388606431
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2877,7 +2856,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1550426552
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3635,7 +3614,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2112024344
 RectTransform:
   m_ObjectHideFlags: 0
@@ -3707,20 +3686,30 @@ PrefabInstance:
       propertyPath: target
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 1030071069971577036, guid: 868b13a7be7adb148b89b9bcf56bb6a6,
+        type: 3}
+      propertyPath: movingWorldRoots.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1030071069971577036, guid: 868b13a7be7adb148b89b9bcf56bb6a6,
+        type: 3}
+      propertyPath: 'movingWorldRoots.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2040054463}
     - target: {fileID: 5515725321500408573, guid: 868b13a7be7adb148b89b9bcf56bb6a6,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -8495
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5515725321500408573, guid: 868b13a7be7adb148b89b9bcf56bb6a6,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 519
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5515725321500408573, guid: 868b13a7be7adb148b89b9bcf56bb6a6,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -9736
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5515725321500408573, guid: 868b13a7be7adb148b89b9bcf56bb6a6,
         type: 3}

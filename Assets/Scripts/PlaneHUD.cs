@@ -124,7 +124,7 @@ public class PlaneHUD : MonoBehaviour {
     }
 
     void UpdateAltitude() {
-        var altitude = plane.Rigidbody.position.y * Units.metersToFeet;
+        var altitude = plane.SimulationPosition.y * Units.metersToFeet;
         this.altitude.text = string.Format("{0:0}", altitude);
     }
 
@@ -168,8 +168,14 @@ public class PlaneHUD : MonoBehaviour {
         UpdateAirspeed();
         UpdateAltitude();
         UpdateHealth();
-        pitchLadder.UpdateColor(normalColor);
-        compass.UpdateColor(normalColor);
+
+        if (pitchLadder != null) {
+            pitchLadder.UpdateColor(normalColor);
+        }
+
+        if (compass != null) {
+            compass.UpdateColor(normalColor);
+        }
 
         //update these elements at reduced rate to make reading them easier
         if (Time.time > lastUpdateTime + (1f / updateRate)) {

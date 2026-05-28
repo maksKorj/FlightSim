@@ -413,7 +413,7 @@ public class AutopilotController : MonoBehaviour {
     /// <returns>Joystick pitch command</returns>
     float CalculateNavigateAltitudeHoldMode(float dt, float targetAltitudeFt, out bool applyTurn) {
         // convert m to ft, m/s to ft/min
-        var altitudeFt = plane.Rigidbody.position.y * Units.metersToFeet;
+        var altitudeFt = plane.SimulationPosition.y * Units.metersToFeet;
         var verticalSpeedFt = plane.Rigidbody.linearVelocity.y * Units.metersToFeet * 60;
 
         var targetClimbRate = altitudeHoldController.Update(dt, altitudeFt, targetAltitudeFt, verticalSpeedFt);
@@ -502,7 +502,7 @@ public class AutopilotController : MonoBehaviour {
         if (!plane.Grounded) return;
 
         takeoffMode.state = TakeoffModeState.TakeoffState.Idle;
-        takeoffMode.runwayAltitude = plane.Rigidbody.position.y * Units.metersToFeet;
+        takeoffMode.runwayAltitude = plane.SimulationPosition.y * Units.metersToFeet;
         SetMode(AutopilotMode.Takeoff);
     }
 
@@ -528,7 +528,7 @@ public class AutopilotController : MonoBehaviour {
     public void ResetNavigation() {
         SetPitchControlMode(NavigateModeState.PitchControlMode.FlightPathMode);
 
-        navigateMode.targetAltitudeFt = plane.Rigidbody.position.y * Units.metersToFeet;
+        navigateMode.targetAltitudeFt = plane.SimulationPosition.y * Units.metersToFeet;
         navigateMode.targetHeading = plane.PitchYawRoll.y;
         navigateMode.targetSpeedKts = plane.LocalVelocity.z * Units.metersToKnots;
     }
@@ -558,7 +558,7 @@ public class AutopilotController : MonoBehaviour {
         if (waypoints == null) throw new ArgumentNullException(nameof(waypoints));
 
         navigateMode.subMode = NavigateModeState.NavigateSubMode.Waypoint;
-        navigateMode.waypointState = waypoints.StartWaypoints(plane.Rigidbody.position);
+        navigateMode.waypointState = waypoints.StartWaypoints(plane.SimulationPosition);
     }
 
     public void StopNavigateWaypoints() {
@@ -638,7 +638,7 @@ public class AutopilotController : MonoBehaviour {
     }
 
     void HandleNavigateWaypoint(float dt) {
-        var currentPosition = plane.Rigidbody.position;
+        var currentPosition = plane.SimulationPosition;
         navigateMode.waypointState.Update(currentPosition);
 
         if (navigateMode.waypointState.Finished) {
@@ -729,7 +729,7 @@ public class AutopilotController : MonoBehaviour {
         var steering = new Vector3(pitchInput, 0, rollInput);
         SetControlInput(plane, steering);
 
-        var alt = plane.Rigidbody.position.y * Units.metersToFeet;
+        var alt = plane.SimulationPosition.y * Units.metersToFeet;
         var targetAlt = takeoffMode.finishTakeoffMinFtAGL + takeoffMode.runwayAltitude;
         var speed = plane.LocalVelocity.z * Units.metersToKnots;
 
@@ -743,7 +743,7 @@ public class AutopilotController : MonoBehaviour {
         if (landingMode.state != LandingModeState.LandingState.Idle) return;
         ResetLanding();
 
-        var planePosition = plane.Rigidbody.position;
+        var planePosition = plane.SimulationPosition;
         var planeDirection = plane.Rigidbody.rotation * Vector3.forward;
         planeDirection.y = 0;
 
@@ -792,7 +792,7 @@ public class AutopilotController : MonoBehaviour {
 
     CaptureResult TryCapture(Runway runway, Vector3 planePosition, Vector3 planeDirection) {
         CaptureResult result = new CaptureResult();
-        var data = runway.GetClosestTouchdown(plane.Rigidbody.position);
+        var data = runway.GetClosestTouchdown(plane.SimulationPosition);
 
         var diff = (data.position - planePosition);
         var diff2D = diff;
@@ -873,7 +873,7 @@ public class AutopilotController : MonoBehaviour {
     }
 
     void UpdateLandingData(float dt) {
-        var planePosition = plane.Rigidbody.position;
+        var planePosition = plane.SimulationPosition;
         var planeVelocityDirection = plane.Rigidbody.linearVelocity.normalized;
 
         var planePosition2D = planePosition;

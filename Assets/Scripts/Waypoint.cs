@@ -7,10 +7,11 @@ public class Waypoint : MonoBehaviour {
     float recommendedSpeed;
 
     new Transform transform;
+    Vector3 simulationPosition;
 
     public Vector3 Position {
         get {
-            return transform.position;
+            return simulationPosition;
         }
     }
 
@@ -22,5 +23,6 @@ public class Waypoint : MonoBehaviour {
 
     void Awake() {
         transform = GetComponent<Transform>();
+        simulationPosition = transform.position;
     }
 }
